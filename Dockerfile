@@ -1,10 +1,10 @@
 # Dockerfile - alpine
 # https://github.com/openresty/docker-openresty
 
-FROM alpine:3.11
+FROM alpine:3.12
 
 ARG RESTY_VERSION="1.17.8.2"
-ARG RESTY_LIBRESSL_VERSION="3.2.1"
+ARG RESTY_LIBRESSL_VERSION="3.3.1"
 ARG RESTY_PCRE_VERSION="8.44"
 ARG RESTY_J="1"
 ARG RESTY_CONFIG_OPTIONS="\

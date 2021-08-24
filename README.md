@@ -1,10 +1,10 @@
 # docker-openresty
 
-openresty:1.17.8.2 with opm
+openresty:1.19.9.1 with opm
 
 ## dependency
 
-- libressl:3.3.1
+- libressl:3.3.3
 - pcre:8.44
 
 ## module

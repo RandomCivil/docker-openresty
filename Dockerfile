@@ -17,7 +17,7 @@ ARG RESTY_CONFIG_OPTIONS="\
     --with-stream_ssl_preread_module \
     "
 ARG RESTY_CONFIG_OPTIONS_MORE=""
-ARG _RESTY_CONFIG_DEPS="--with-openssl=/tmp/libressl-${RESTY_LIBRESSL_VERSION} --with-pcre=/tmp/pcre-${RESTY_PCRE_VERSION}"
+ARG _RESTY_CONFIG_DEPS="--with-openssl=/tmp/boringssl --with-pcre=/tmp/pcre-${RESTY_PCRE_VERSION}"
 
 RUN apk add --no-cache --virtual .build-deps \
         build-base \
@@ -34,8 +34,8 @@ RUN apk add --no-cache --virtual .build-deps \
         iproute2 \
         perl \
     && cd /tmp \
-    && curl -fSL https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${RESTY_LIBRESSL_VERSION}.tar.gz -o libressl-${RESTY_LIBRESSL_VERSION}.tar.gz \
-    && tar xzvf libressl-${RESTY_LIBRESSL_VERSION}.tar.gz \
+    && curl -fSL https://boringssl.googlesource.com/boringssl/+archive/refs/heads/chromium-stable.tar.gz -o boringssl.tar.gz \
+    && tar xzvf boringssl.tar.gz \
     && curl -fSL https://ftp.pcre.org/pub/pcre/pcre-${RESTY_PCRE_VERSION}.tar.gz -o pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && tar xzf pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && curl -fSL https://openresty.org/download/openresty-${RESTY_VERSION}.tar.gz -o openresty-${RESTY_VERSION}.tar.gz \

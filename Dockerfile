@@ -26,6 +26,7 @@ RUN apk add --no-cache --virtual .build-deps \
         cmake \
         libunwind \
         go \
+        git \
         readline-dev \
         zlib-dev \
         xz \

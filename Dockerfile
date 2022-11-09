@@ -55,6 +55,9 @@ RUN apk add --no-cache --virtual .build-deps \
     && tar xzf openresty-${RESTY_VERSION}.tar.gz \
     && cd /tmp/openresty-${RESTY_VERSION} \
     && ./configure -j${RESTY_J} ${_RESTY_CONFIG_DEPS} ${RESTY_CONFIG_OPTIONS} ${RESTY_CONFIG_OPTIONS_MORE} \
+    # Prevent build-error 127 which seems to be caused by the ssl.h file missing:
+    && mkdir -p /usr/src/boringssl/.openssl/include/openssl/ \
+    && touch /usr/src/boringssl/.openssl/include/openssl/ssl.h \
     && make -j${RESTY_J} \
     && make -j${RESTY_J} install \
     && curl -fSL http://www.over-yonder.net/~fullermd/projects/libcidr/libcidr-1.2.3.tar.xz -o /tmp/libcidr-1.2.3.tar.xz \

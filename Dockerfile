@@ -23,6 +23,7 @@ RUN apk add --no-cache --virtual .build-deps \
         build-base \
         linux-headers \
         make \
+        cmake \
         readline-dev \
         zlib-dev \
         xz \

@@ -1,9 +1,9 @@
 # Dockerfile - alpine
 # https://github.com/openresty/docker-openresty
 
-FROM alpine:3.12
+FROM alpine:3.15
 
-ARG RESTY_VERSION="1.17.8.2"
+ARG RESTY_VERSION="1.21.4.1"
 ARG RESTY_LIBRESSL_VERSION="3.3.3"
 ARG RESTY_PCRE_VERSION="8.45"
 ARG RESTY_J="1"
@@ -48,6 +48,7 @@ RUN apk add --no-cache --virtual .build-deps \
     && ln -s ../include \
     && cd "/usr/src/boringssl" \
     && cp "build/crypto/libcrypto.a" "build/ssl/libssl.a" ".openssl/lib" \
+    && cd /tmp \
     && curl -fSL https://sourceforge.net/projects/pcre/files/pcre/${RESTY_PCRE_VERSION}/pcre-${RESTY_PCRE_VERSION}.tar.gz/download -o pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && tar xzf pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && curl -fSL https://openresty.org/download/openresty-${RESTY_VERSION}.tar.gz -o openresty-${RESTY_VERSION}.tar.gz \

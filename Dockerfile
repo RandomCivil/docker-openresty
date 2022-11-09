@@ -5,7 +5,7 @@ FROM alpine:3.12
 
 ARG RESTY_VERSION="1.17.8.2"
 ARG RESTY_LIBRESSL_VERSION="3.3.3"
-ARG RESTY_PCRE_VERSION="8.44"
+ARG RESTY_PCRE_VERSION="8.45"
 ARG RESTY_J="1"
 ARG RESTY_CONFIG_OPTIONS="\
     --with-http_stub_status_module \
@@ -36,7 +36,7 @@ RUN apk add --no-cache --virtual .build-deps \
     && cd /tmp \
     && curl -fSL https://boringssl.googlesource.com/boringssl/+archive/refs/heads/chromium-stable.tar.gz -o boringssl.tar.gz \
     && tar xzvf boringssl.tar.gz \
-    && curl -fSL https://ftp.pcre.org/pub/pcre/pcre-${RESTY_PCRE_VERSION}.tar.gz -o pcre-${RESTY_PCRE_VERSION}.tar.gz \
+    && curl -fSL https://sourceforge.net/projects/pcre/files/pcre/${RESTY_PCRE_VERSION}/pcre-${RESTY_PCRE_VERSION}.tar.gz/download -o pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && tar xzf pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && curl -fSL https://openresty.org/download/openresty-${RESTY_VERSION}.tar.gz -o openresty-${RESTY_VERSION}.tar.gz \
     && tar xzf openresty-${RESTY_VERSION}.tar.gz \

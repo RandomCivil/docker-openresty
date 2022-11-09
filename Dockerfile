@@ -17,7 +17,7 @@ ARG RESTY_CONFIG_OPTIONS="\
     --with-stream_ssl_preread_module \
     "
 ARG RESTY_CONFIG_OPTIONS_MORE=""
-ARG _RESTY_CONFIG_DEPS="--with-openssl=/tmp/boringssl --with-pcre=/tmp/pcre-${RESTY_PCRE_VERSION} --with-cc-opt=-I /tmp/boringssl/.openssl/include --with-ld-opt=-L /tmp/boringssl/.openssl/lib"
+ARG _RESTY_CONFIG_DEPS="--with-openssl=/usr/src/boringssl --with-pcre=/tmp/pcre-${RESTY_PCRE_VERSION} --with-cc-opt=-I'/usr/src/boringssl/.openssl/include/'"
 
 RUN apk add --no-cache --virtual .build-deps \
         build-base \
@@ -37,11 +37,16 @@ RUN apk add --no-cache --virtual .build-deps \
         iproute2 \
         perl \
     && cd /tmp \
-    && curl -fSL https://boringssl.googlesource.com/boringssl/+archive/refs/heads/chromium-stable.tar.gz -o boringssl.tar.gz \
-    && mkdir /tmp/boringssl && tar xzvf boringssl.tar.gz -C /tmp/boringssl \
-    && mkdir /tmp/boringssl/build && cd /tmp/boringssl/build && cmake ../ && make && cd ../ \
-    && mkdir -p .openssl/lib && cd .openssl && ln -s ../include . && cd ../ \
-    && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib && cd /tmp \
+    && git clone --depth 1 https://boringssl.googlesource.com/boringssl "/usr/src/boringssl" \
+    && mkdir "/usr/src/boringssl/build/" \
+    && cd "/usr/src/boringssl/build/" \
+    && cmake -DCMAKE_BUILD_TYPE=Release ../ \
+    && make -j$(getconf _NPROCESSORS_ONLN) \
+    && mkdir -p "/usr/src/boringssl/.openssl/lib" \
+    && cd "/usr/src/boringssl/.openssl" \
+    && ln -s ../include \
+    && cd "/usr/src/boringssl" \
+    && cp "build/crypto/libcrypto.a" "build/ssl/libssl.a" ".openssl/lib" \
     && curl -fSL https://sourceforge.net/projects/pcre/files/pcre/${RESTY_PCRE_VERSION}/pcre-${RESTY_PCRE_VERSION}.tar.gz/download -o pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && tar xzf pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && curl -fSL https://openresty.org/download/openresty-${RESTY_VERSION}.tar.gz -o openresty-${RESTY_VERSION}.tar.gz \
@@ -65,5 +70,6 @@ RUN apk add --no-cache --virtual .build-deps \
     && ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
 
 ENV PATH=$PATH:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin
+RUN rm -rf /usr/src/boringssl/build
 RUN opm get bungle/lua-resty-template ledgetech/lua-resty-http GUI/lua-libcidr-ffi
 CMD ["/usr/local/openresty/bin/openresty", "-g", "daemon off;"]

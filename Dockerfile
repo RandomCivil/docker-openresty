@@ -17,7 +17,8 @@ ARG RESTY_CONFIG_OPTIONS="\
     --with-stream_ssl_preread_module \
     "
 ARG RESTY_CONFIG_OPTIONS_MORE=""
-ARG _RESTY_CONFIG_DEPS="--with-openssl=/tmp/boringssl --with-pcre=/tmp/pcre-${RESTY_PCRE_VERSION} --with-cc-opt=/tmp/boringssl/.openssl/include --with-ld-opt=/tmp/boringssl/.openssl/lib"
+ARG _RESTY_CONFIG_DEPS="--with-openssl=/tmp/boringssl
+--with-pcre=/tmp/pcre-${RESTY_PCRE_VERSION} --with-cc-opt=-I/tmp/boringssl/.openssl/include --with-ld-opt=-L/tmp/boringssl/.openssl/lib"
 
 RUN apk add --no-cache --virtual .build-deps \
         build-base \

@@ -4,7 +4,6 @@
 FROM alpine:3.15
 
 ARG RESTY_VERSION="1.21.4.1"
-ARG RESTY_LIBRESSL_VERSION="3.3.3"
 ARG RESTY_PCRE_VERSION="8.45"
 ARG RESTY_J="1"
 ARG RESTY_CONFIG_OPTIONS="\
@@ -66,7 +65,7 @@ RUN apk add --no-cache --virtual .build-deps \
     && cd libcidr-1.2.3 && make && make install && cd /tmp \
     && cd /tmp \
     && rm -rf \
-        libressl-${RESTY_LIBRESSL_VERSION}.tar.gz libressl-${RESTY_LIBRESSL_VERSION} \
+        /usr/src/boringssl \
         openresty-${RESTY_VERSION}.tar.gz openresty-${RESTY_VERSION} \
         pcre-${RESTY_PCRE_VERSION}.tar.gz pcre-${RESTY_PCRE_VERSION} \
         libcidr-1.2.3.tar libcidr-1.2.3.tar.xz libcidr-1.2.3 \
@@ -75,6 +74,5 @@ RUN apk add --no-cache --virtual .build-deps \
     && ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
 
 ENV PATH=$PATH:/usr/local/openresty/luajit/bin:/usr/local/openresty/nginx/sbin:/usr/local/openresty/bin
-RUN rm -rf /usr/src/boringssl/build
 RUN opm get bungle/lua-resty-template ledgetech/lua-resty-http GUI/lua-libcidr-ffi
 CMD ["/usr/local/openresty/bin/openresty", "-g", "daemon off;"]

@@ -36,6 +36,9 @@ RUN apk add --no-cache --virtual .build-deps \
     && cd /tmp \
     && curl -fSL https://boringssl.googlesource.com/boringssl/+archive/refs/heads/chromium-stable.tar.gz -o boringssl.tar.gz \
     && mkdir /tmp/boringssl && tar xzvf boringssl.tar.gz -C /tmp/boringssl \
+    && mkdir /tmp/boringssl/build && cd /tmp/boringssl/build && cmake ../ && make && cd ../ \
+    && mkdir -p .openssl/lib && cd .openssl && ln -s ../include . && cd ../ \
+    && cp build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib && cd /tmp \
     && curl -fSL https://sourceforge.net/projects/pcre/files/pcre/${RESTY_PCRE_VERSION}/pcre-${RESTY_PCRE_VERSION}.tar.gz/download -o pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && tar xzf pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && curl -fSL https://openresty.org/download/openresty-${RESTY_VERSION}.tar.gz -o openresty-${RESTY_VERSION}.tar.gz \

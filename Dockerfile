@@ -1,22 +1,28 @@
 # Dockerfile - alpine
 # https://github.com/openresty/docker-openresty
 
-FROM alpine:3.15
+FROM alpine:3.21
 
-ARG RESTY_VERSION="1.21.4.1"
+ARG RESTY_VERSION="1.27.1.1"
 ARG RESTY_PCRE_VERSION="8.45"
 ARG RESTY_J="1"
 ARG RESTY_CONFIG_OPTIONS="\
+    --with-debug \
     --with-http_stub_status_module \
     --with-http_realip_module \
     --with-http_ssl_module \
     --with-http_v2_module \
+    --with-http_v3_module \
     --with-pcre-jit \
     --with-stream \
     --with-stream_ssl_preread_module \
     "
+    #&& mkdir "/usr/src/boringssl/build/" \
 ARG RESTY_CONFIG_OPTIONS_MORE=""
-ARG _RESTY_CONFIG_DEPS="--with-openssl=/usr/src/boringssl --with-pcre=/tmp/pcre-${RESTY_PCRE_VERSION} --with-cc-opt=-I'/usr/src/boringssl/.openssl/include/'"
+ARG _RESTY_CONFIG_DEPS="--with-openssl=/usr/src/boringssl \
+--with-pcre=/tmp/pcre-${RESTY_PCRE_VERSION} \
+--with-cc-opt=-I'/usr/src/boringssl/.openssl/include/' \
+--with-ld-opt='-L/usr/src/boringssl/build/ssl -L/usr/src/boringssl/build/crypto -lpthread -lm'"
 
 RUN apk add --no-cache --virtual .build-deps \
         build-base \
